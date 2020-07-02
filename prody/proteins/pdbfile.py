@@ -284,9 +284,12 @@ def parsePDBStream(stream, **kwargs):
         try:
             lines = stream.readlines()
         except AttributeError as err:
-            try:
-                lines = stream.read().split('\n')
-            except AttributeError:
+           parsedLines = stream.read()
+           try:
+                lines = parsedLines.split('\n')
+           except TypeError:
+                lines = parsedLines.decode('utf-8').splitlines()
+           except AttributeError:
                 raise err
         if not len(lines):
             raise ValueError('empty PDB file or stream')
